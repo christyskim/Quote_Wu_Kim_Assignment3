@@ -29,20 +29,42 @@ public class main {
 			switch(choice){
 				case "A":
 				case "a":
+					boolean flag = false;
 					System.out.println("Please enter quote:");
 					String quote = sc.nextLine(); 
+					
+					if(!validInput(quote)){///check for invalid input
+						flag = true;///if invalid, raise flag, and break 
+					}
+					
 					System.out.println("Please enter author:");
 					String author = sc.nextLine();
-					//q.addQuote(author, quote); ///be careful with order in the parameter, make sure it is addQuote(author, quote)
-					AddXMLQuote adder = new AddXMLQuote();
-					try {
-						adder.addQuoteToXML(quote, author);
-					} catch (Exception e) {
-						System.out.println("Failed to add to XML:"+e);
+					
+					if(!validInput(author)){///check for invalid input
+						flag = true; ///if invalid, raise flag, and break 
 					}
-					parser = new QuoteSaxParser("quotes/quotes.xml");
-					q = parser.getQuoteList();
-					//System.out.println(q.getSize()+"---------");
+					
+					if(!flag){ ///check if the quote already exists, if it exists, raise flag
+						for(int i= 0; i < q.getSize(); i++){///loop through the list
+							if(q.getQuote(i).getQuoteText().equals(quote)){ ///search to see if quote already exists
+								System.out.println("Error: unable to add because quote already exists\n");
+								flag = true;
+							}
+						}
+					}
+					if(!flag){
+						//q.addQuote(author, quote); ///be careful with order in the parameter, make sure it is addQuote(author, quote)
+						AddXMLQuote adder = new AddXMLQuote();
+						try {
+							adder.addQuoteToXML(quote, author);
+						} catch (Exception e) {
+							System.out.println("Failed to add to XML:"+e);
+						}
+						parser = new QuoteSaxParser("quotes/quotes.xml");
+						q = parser.getQuoteList();
+						//System.out.println(q.getSize()+"---------");
+					}
+					
 					break;
 				
 				case "R":
@@ -219,9 +241,30 @@ public class main {
 		System.out.println();
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<");
 		System.out.println();
-		recentSearchCount++;
+		recentSearchCount++;	
+	}
+	
+	public static boolean validInput(String userInput){
 		
+		boolean temp = true;
 		
+		if(userInput.length() > 300){
+			temp = false;
+			System.out.println("Error: input entered is too long\n");
+			return temp;
+		}
+		if(userInput.isEmpty()){
+			temp = false;
+			System.out.println("Error: input cannot be empty");
+			return temp;
+		}
+		if(userInput.charAt(0) == ' ' || userInput.charAt(0) == '\n'){
+			temp = false;
+			System.out.println("Error: input cannot start with a whitespace");
+			return temp;
+		}
+		
+		return temp;
 	}
 	
 }

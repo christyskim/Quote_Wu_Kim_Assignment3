@@ -18,7 +18,7 @@ public class AddXMLQuote {
         Collection<Quote> quotes = new ArrayList<Quote>();
         quotes.add(new Quote());
 
-        for (Quote quote : quotes) {
+        
             Element newQuoteToBeAdded = document.createElement("quote"); //new quote(node) to be added
 
             Element name = document.createElement("quote-text");//quote section
@@ -30,7 +30,7 @@ public class AddXMLQuote {
             newQuoteToBeAdded.appendChild(port);
 
             root.appendChild(newQuoteToBeAdded);//add to quote-list
-        }
+        
 
         DOMSource source = new DOMSource(document);
 
